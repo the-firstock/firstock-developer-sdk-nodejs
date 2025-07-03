@@ -2,7 +2,7 @@
   "name": "firstock",
   "version": "1.0.0",
   "description": "Node js package for using firstock developer apis",
-  "main": "build/index.js",
+  "main": "dist/index.js",
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
@@ -26,6 +26,7 @@
     "sha256": "^0.2.0"
   },
   "devDependencies": {
-    "@types/sha256": "^0.2.2"
+    "@types/sha256": "^0.2.2",
+    "typescript": "^5.8.3"
   }
 }
