@@ -1,10 +1,10 @@
-# The Firstock Connect API Nodejs client - 
+# The Firstock Developer API Nodejs client - 
 
-To communicate with the Firstock Connect API using Nodejs, you can use the official Nodejs client library provided by Firstock.
+To communicate with the Firstock Developer API using Nodejs, you can use the official Nodejs client library provided by Firstock.
 `<br />` Licensed under the MIT License.
 
 
-[Version - 3.1.1](https://www.npmjs.com/package/thefirstock)
+[Version - 1.0.0](https://www.npmjs.com/package/firstock)
 
 
 ## Documentation
@@ -21,7 +21,7 @@ To communicate with the Firstock Connect API using Nodejs, you can use the offic
 Use the package manager [npm](https://www.npmjs.com/) to install thefirstock.
 
 ```bash
-npm install thefirstock
+npm install firstock
 ```
 
 ## API usage
@@ -283,36 +283,7 @@ firstock.timePriceSeries({
 
 Refer to the [Firstock Connect Documentation](https://connect.thefirstock.com/)  for the complete list of supported methods.
 
-## WebSocket usage
 
-
-```js
-//Initializer//
-const ws = firstock.initializeWebSocket(1); // Sending Number = 1 or 2 for using two websockets simultaneoulsy
-
-ws.on("open", function open() {
-  firstock.getWebSocketDetails((err, result) => {
-    if (!err) {
-      firstock.initialSendWebSocketDetails(ws, result, () => {
-        //Subscribe Feed
-        ws.send(firstock.subscribeFeedAcknowledgement("NSE|26000")); //Sending NIFTY 50 Token
-      });
-    }
-  });
-});
-
-ws.on("error", function error(error) {
-  console.log(`WebSocket error: ${error}`);
-});
-
-ws.on("message", function message(data) {
-  const result = firstock.receiveWebSocketDetails(data);
-  console.log("message: ", result);
-  if (result["t"] === "tk" && result["ts"] === "Nifty 50") {
-    ws.send(firstock.subscribeFeedAcknowledgement("NSE|26009#NSE|26017")); //Sending BANKNIFTY and INDIAVIX Token
-  }
-});
-```
 
 ## Changelog
 

@@ -2,13 +2,15 @@
   "name": "firstock",
   "version": "1.0.0",
   "description": "Node js package for using firstock developer apis",
-  "main": "index.js",
+  "main": "build/index.js",
+  "type": "commonjs",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/the-firstock/firstockconnectjs.git"
+    "url": "git+https://github.com/the-firstock/firstock-developer-sdk-nodejs"
   },
   "keywords": [
     "firstock"
@@ -16,16 +18,12 @@
   "author": "firstock",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/the-firstock/firstockconnectjs/issues"
+    "url": "https://github.com/the-firstock/firstock-developer-sdk-nodejs"
   },
-  "homepage": "https://github.com/the-firstock/firstockconnectjs#readme",
+  "homepage": "https://github.com/the-firstock/firstock-developer-sdk-nodejs#readme",
   "dependencies": {
-    "axios": "^0.27.2",
-    "js-sha256": "^0.11.1",
-    "jsonwebtoken": "^9.0.2",
-    "node-jose": "^2.2.0",
-    "sha256": "^0.2.0",
-    "ws": "^8.8.0"
+    "axios": "^1.10.0",
+    "sha256": "^0.2.0"
   },
   "devDependencies": {
     "@types/sha256": "^0.2.2"
