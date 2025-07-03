@@ -1,7 +1,3 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const Firstock_1 = __importDefault(require("./Classes/Firstock"));
-exports.default = Firstock_1.default;
+const Firstock_1 = require("./Classes/Firstock");
+module.exports = Firstock_1.Firstock;

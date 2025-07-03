@@ -3,8 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Firstock_1 = __importDefault(require("./Classes/Firstock"));
-const firstock = new Firstock_1.default();
+const index_1 = __importDefault(require("./index"));
+const firstock = new index_1.default();
 let orderNumber = "";
 const userDetails = {
     userId: "",

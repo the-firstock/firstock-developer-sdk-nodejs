@@ -1,7 +1,7 @@
 # The Firstock Developer API Nodejs client - 
 
 To communicate with the Firstock Developer API using Nodejs, you can use the official Nodejs client library provided by Firstock.
-`<br />` Licensed under the MIT License.
+Licensed under the MIT License.
 
 
 [Version - 1.0.0](https://www.npmjs.com/package/firstock)
@@ -10,11 +10,6 @@ To communicate with the Firstock Developer API using Nodejs, you can use the off
 ## Documentation
 
 * Nodejs client documentation
-
-## v3 - Changes
-
-* Error code response structured has been changed
-* Renamed
 
 ## Installing the client
 

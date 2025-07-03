@@ -45,7 +45,20 @@ const readData = (callback) => {
     const path = "./config.json";
     fs.readFile(path, "utf-8", (err, jsonString) => {
         if (err) {
-            callback(err, null);
+            if (err.code === "ENOENT") {
+                // File not found: create it with "{}"
+                fs.writeFile(path, "{}", "utf-8", (writeErr) => {
+                    if (writeErr) {
+                        callback(writeErr, null);
+                    }
+                    else {
+                        callback(null, {}); // Return an empty object
+                    }
+                });
+            }
+            else {
+                callback(err, null);
+            }
         }
         else {
             try {

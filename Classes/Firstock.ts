@@ -235,7 +235,7 @@ const axiosInterceptor: AxiosInstance = axios.create({
   baseURL: API_LINK,
 });
 
-class Firstock extends AFirstock {
+export class Firstock extends AFirstock {
   private token: string;
   private userId: string;
   private jsonObj: ConfigData = {};
@@ -1949,4 +1949,3 @@ indexList(
 
 }
 
-export default Firstock;

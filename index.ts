@@ -1,4 +1,5 @@
-import Firstock from "./Classes/Firstock";
+import {Firstock} from "./Classes/Firstock";
 
 
-export default Firstock;
+
+export = Firstock;

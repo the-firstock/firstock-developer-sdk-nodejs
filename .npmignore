@@ -1,0 +1,43 @@
+# Source TypeScript files
+src/
+*.ts
+
+# Build/config files
+tsconfig.json
+tsconfig.*.json
+
+# Node and package manager stuff
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Editor/IDE settings
+.vscode/
+.idea/
+*.swp
+
+# Tests and coverage
+test/
+tests/
+coverage/
+*.spec.ts
+*.test.ts
+*.spec.js
+*.test.js
+
+# CI and repo configs
+.github/
+.gitlab/
+.circleci/
+
+# Misc
+.DS_Store
+Thumbs.db
+.env
+.env.*
+*.log
+
+# Ignore self (the ignore files)
+.npmignore
+.gitignore

@@ -15,17 +15,32 @@ interface JsonData {
   };
 }
 
+
 const saveData = (data: any, file: string, callback: (err: NodeJS.ErrnoException | null) => void): void => {
   const path = "./config.json";
   const jsonData = JSON.stringify(data, null, 2);
   fs.writeFile(path, jsonData, callback);
 };
 
+
+
 const readData = (callback: (err: Error | string | null, data: JsonData | null) => void): void => {
   const path = "./config.json";
   fs.readFile(path, "utf-8", (err: NodeJS.ErrnoException | null, jsonString: string) => {
     if (err) {
-      callback(err, null);
+      if (err.code === "ENOENT") {
+        // File not found: create it with "{}"
+        fs.writeFile(path, "{}", "utf-8", (writeErr) => {
+          if (writeErr) {
+            callback(writeErr, null);
+          } else {
+            callback(null, {}); // Return an empty object
+          }
+        });
+      } else {
+        callback(err, null);
+      }
+   
     } else {
       try {
         const data = JSON.parse(jsonString);

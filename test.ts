@@ -1,4 +1,4 @@
-import Firstock from "./Classes/Firstock";
+import Firstock from "./index";
 
 const firstock = new Firstock();
 

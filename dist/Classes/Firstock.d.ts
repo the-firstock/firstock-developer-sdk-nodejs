@@ -176,7 +176,7 @@ interface GetExpiryParams {
     tradingSymbol: string;
     [key: string]: any;
 }
-declare class Firstock extends AFirstock {
+export declare class Firstock extends AFirstock {
     private token;
     private userId;
     private jsonObj;
@@ -915,4 +915,4 @@ declare class Firstock extends AFirstock {
      */
     brokerageCalculator(params: BrokerageCalculatorParams, callBack: (error: Error | string | null, result: any | null) => void): void;
 }
-export default Firstock;
+export {};

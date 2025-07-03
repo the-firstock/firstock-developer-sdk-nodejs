@@ -36,6 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Firstock = void 0;
 const axios_1 = __importDefault(require("axios"));
 const sha256 = __importStar(require("sha256"));
 const AFirstock_1 = __importDefault(require("./AFirstock"));
@@ -1767,4 +1768,4 @@ class Firstock extends AFirstock_1.default {
         });
     }
 }
-exports.default = Firstock;
+exports.Firstock = Firstock;
