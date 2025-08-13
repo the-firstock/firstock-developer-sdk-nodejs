@@ -231,6 +231,12 @@ interface GetExpiryParams {
   [key: string]: any;
 }
 
+interface GetHoldingsParams {
+  userId: string;
+  // jKey: string;
+  [key: string]: any;
+}
+
 const axiosInterceptor: AxiosInstance = axios.create({
   baseURL: API_LINK,
 });
@@ -1947,5 +1953,52 @@ indexList(
     });
   }
 
+/**
+ * Retrieves holdings details for a user from the Firstock API.
+ *
+ * This method sends a request to the Firstock holdingsDetails endpoint using the provided
+ * user ID and session token (jKey) retrieved from config.json. The response contains the user's holdings information.
+ *
+ * @param {Object} params - Holdings parameters.
+ * @param {string} params.userId - Firstock user ID (e.g., SU2707).
+ * @param {function} callBack - Callback with `(error, result)`:
+ * - `error`: Error object if the request fails.
+ * - `result`: Parsed response containing holdings information if successful.
+ */
+getHoldingsDetails(
+  { userId }: GetHoldingsParams,
+  callBack: (error: Error | null, result: Response | null) => void
+): void {
+  readData((err: Error | string | null, data: ConfigData | null) => {
+    if (err) {
+      const errorMessage = err instanceof Error ? err.message : err;
+      callBack(new Error(errorMessageMapping({ message: errorMessage })), null);
+    } else if (data) {
+      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+        if (err) {
+          callBack(new Error(err), null);
+        } else if (jKey) {
+          axiosInterceptor
+            .post<Response>("holdingsDetails", {
+              userId,
+              jKey
+            })
+            .then((response: { data: Response }) => {
+              const { data } = response;
+              this.userId = userId;
+              callBack(null, data);
+            })
+            .catch((error: AxiosError) => {
+              callBack(handleError(error), null);
+            });
+        } else {
+          callBack(new Error("No jKey found for userId in config.json"), null);
+        }
+      });
+    } else {
+      callBack(new Error("No config data found"), null);
+    }
+  });
+}
 }
 

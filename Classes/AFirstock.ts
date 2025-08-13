@@ -223,6 +223,12 @@ interface GetExpiryParams {
   tradingSymbol: string;
   [key: string]: any;
 }
+
+interface GetHoldingsParams {
+  userId: string;
+  // jKey: string;
+  [key: string]: any;
+}
   
   
   abstract class AFirstock {
@@ -365,6 +371,11 @@ interface GetExpiryParams {
     abstract brokerageCalculator(
         params: BrokerageCalculatorParams,
         callBack: (error: Error | string | null, result: Response | null) => void
+      ): void;
+
+    abstract getHoldingsDetails(
+        params: GetHoldingsParams,
+        callBack: (error: Error | null, result: Response | null) => void
       ): void;
   }
   

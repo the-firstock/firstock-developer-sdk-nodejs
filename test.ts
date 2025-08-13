@@ -3,14 +3,21 @@ import Firstock from "./index";
 const firstock = new Firstock();
 
 let orderNumber: string = "";
-const userDetails = {
-    userId: "",
-    password: "",
-    TOTP: "",
-    vendorCode: "",
-    apiKey: "",
-  };
-// Login and user Details start
+// const userDetails = {
+//   userId: "NP2997",
+//   password: "Skanda@202",
+//   TOTP: "1997",
+//   vendorCode: "NP2997_API",
+//   apiKey: "65d837ab42a4b0000fbe05f37ee575fb",
+// };
+// const userDetails = {
+//   userId: "",
+//   password: "",
+//   TOTP: "",
+//   vendorCode: "",
+//   apiKey: "",
+// };
+// // Login and user Details start
 // firstock.login(
 //   {
 //     userId: userDetails.userId,
@@ -356,6 +363,17 @@ const userDetails = {
 //     console.log("brokerageCalculator Result: ", result)
 //   }
 // )
+
+// Get Holdings Details
+// firstock.getHoldingsDetails(
+//   {
+//     userId: userDetails.userId
+//     },
+//   (err: Error | null, result: any) => {
+//     console.log("Error: ", err);
+//     console.log("Result: ", result);
+//   }
+// );
 
 // Logout
 // firstock.logout(
