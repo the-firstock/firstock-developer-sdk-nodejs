@@ -1,11 +1,3 @@
-🚨 **DEPRECATED** 🚨
-
-This repository is no longer maintained. Please see [Developer Node js](https://github.com/the-firstock/firstock-developer-sdk-nodejs) for the latest updates and support.
-
-- Issues and pull requests are now closed.
-- Please migrate to [Developer Node js](https://github.com/the-firstock/firstock-developer-sdk-nodejs).
-
-
 
 # The Firstock Developer API Nodejs client - 
 
@@ -292,6 +284,7 @@ Refer to the [Firstock Connect Documentation](https://connect.thefirstock.com/) 
 ## Changelog
 
 Check release notes.
+
 
 
 
