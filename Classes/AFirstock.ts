@@ -103,6 +103,7 @@ interface ProductConversionParams {
   previousProduct: string;
   transactionType?: string;
   positionType?: string;
+  msgFlag?: string; 
   [key: string]: any;
 }
 

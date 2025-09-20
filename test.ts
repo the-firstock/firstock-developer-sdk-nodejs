@@ -170,6 +170,22 @@ let orderNumber: string = "";
 //   }
 // );
 
+// firstock.productConversion(
+//   {
+//     userId: userDetails.userId,
+//     exchange: "NFO",
+//     tradingSymbol: "NIFTY",
+//     quantity: "250",
+//     product: "C",
+//     previousProduct: "I",
+//     msgFlag: "1" // Buy and Day
+//   },
+//   (err: Error | string | null, result: any) => {
+//     console.log("productConversion (Buy & Day) Error: ", err);
+//     console.log("productConversion (Buy & Day) Result: ", result);
+//   }
+// );
+
 // Holdings
 // firstock.holdings(
 //   { userId: userDetails.userId},//, product: "C" 

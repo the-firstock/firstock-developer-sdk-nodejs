@@ -110,6 +110,7 @@ interface ProductConversionParams {
   previousProduct: string;
   transactionType?: string;
   positionType?: string;
+  msgFlag?: string; 
   [key: string]: any;
 }
 
@@ -1114,46 +1115,54 @@ positionBook(params: PositionsBookParams, callBack: (error: Error | string | nul
  *
  * @returns {void}
  */
-  productConversion(
-    params: ProductConversionParams,
-    callBack: (error: Error | string | null, result: Response | null) => void
-  ): void {
-    const currentUserId = params.userId;
-    readData((err: Error | string | null, data: ConfigData | null) => {
-      if (err) {
-        callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
-      } else if (data) {
-        const userId = currentUserId;
-        checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
-          if (err) {
-            callBack(err, null);
-          } else if (jKey) {
-            axiosInterceptor
-              .post<Response>(`productConversion`, {
-                userId,
-                jKey,
-                exchange: params.exchange,
-                tradingSymbol: params.tradingSymbol,
-                quantity: params.quantity,
-                product: params.product,
-                previousProduct: params.previousProduct,
-              })
-              .then((response) => {
-                const { data } = response;
-                callBack(null, data);
-              })
-              .catch((error: AxiosError) => {
-                callBack(handleError(error), null);
-              });
-          } else {
-            callBack("No jKey found", null);
+productConversion(
+  params: ProductConversionParams,
+  callBack: (error: Error | string | null, result: Response | null) => void
+): void {
+  const currentUserId = params.userId;
+  readData((err: Error | string | null, data: ConfigData | null) => {
+    if (err) {
+      callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
+    } else if (data) {
+      const userId = currentUserId;
+      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+        if (err) {
+          callBack(err, null);
+        } else if (jKey) {
+          // Prepare the request payload
+          const requestPayload: any = {
+            userId,
+            jKey,
+            exchange: params.exchange,
+            tradingSymbol: params.tradingSymbol,
+            quantity: params.quantity,
+            product: params.product,
+            previousProduct: params.previousProduct,
+          };
+
+          // Add msgFlag to payload if provided
+          if (params.msgFlag) {
+            requestPayload.msgFlag = params.msgFlag;
           }
-        });
-      } else {
-        callBack("No config data found", null);
-      }
-    });
-  }
+
+          axiosInterceptor
+            .post<Response>(`productConversion`, requestPayload)
+            .then((response) => {
+              const { data } = response;
+              callBack(null, data);
+            })
+            .catch((error: AxiosError) => {
+              callBack(handleError(error), null);
+            });
+        } else {
+          callBack("No jKey found", null);
+        }
+      });
+    } else {
+      callBack("No config data found", null);
+    }
+  });
+}
 /**
  * Retrieves the user's holdings (portfolio) from Firstock.
  *
