@@ -5,7 +5,7 @@ To communicate with the Firstock Developer API using Nodejs, you can use the off
 Licensed under the MIT License.
 
 
-[Version - 1.0.0](https://www.npmjs.com/package/firstock)
+[Version - 1.0.5](https://www.npmjs.com/package/firstock)
 
 
 ## Documentation
@@ -276,6 +276,149 @@ firstock.timePriceSeries({
   console.log("timePriceSeries Result: ", result);
 });
 ```
+
+```javascript
+WebSockets
+
+Order Update Feed
+
+const { Firstock, FirstockWebSocket } = require('./websockets');
+
+// Define callback method 
+function orderBookData(data) {
+    console.log(data);
+}
+
+const userId = 'YOUR_USER_ID';
+
+const model = new FirstockWebSocket({
+    order_data: orderBookData
+});
+
+async function main() {
+    const [conn, err] = await Firstock.initializeWebsockets(userId, model);
+    console.log("Error:", err);
+
+    await new Promise(resolve => setTimeout(resolve, 25000));
+
+    // Close WebSocket connection
+    const closeErr = await Firstock.closeWebsocket(conn);
+    console.log("Close Error:", closeErr);
+}
+
+main();
+
+Position Update Feed
+
+const { Firstock, FirstockWebSocket } = require('./websockets');
+
+// Define callback method 
+function positionBookData(data) {
+    console.log(data);
+}
+
+const userId = 'YOUR_USER_ID';
+
+const model = new FirstockWebSocket({
+    position_data: positionBookData
+});
+
+async function main() {
+    const [conn, err] = await Firstock.initializeWebsockets(userId, model);
+    console.log("Error:", err);
+
+    await new Promise(resolve => setTimeout(resolve, 25000));
+
+    // Close WebSocket connection
+    const closeErr = await Firstock.closeWebsocket(conn);
+    console.log("Close Error:", closeErr);
+}
+
+main();
+
+
+Subscribe Feed
+
+const { Firstock, FirstockWebSocket } = require('./websockets');
+
+// Define callback method 
+function subscribeFeedData(data) {
+    console.log(data);
+}
+
+const userId = 'YOUR_USER_ID';
+
+const model = new FirstockWebSocket({
+    subscribe_feed_data: subscribeFeedData,
+    tokens: ["NSE:26000"]
+});
+
+async function main() {
+    const [conn, err] = await Firstock.initializeWebsockets(userId, model);
+    console.log("Error:", err);
+
+    if (conn) {
+        const subscribeErr = await Firstock.subscribe(conn, ["BSE:1"]);
+        console.log("Subscribe Error:", subscribeErr);
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 25000));
+
+    // Unsubscribe
+    const unsubErr = await Firstock.unsubscribe(conn, ["NSE:26000", "BSE:1"]);
+    console.log("Unsubscribe Error:", unsubErr);
+
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    // Close WebSocket connection
+    const closeErr = await Firstock.closeWebsocket(conn);
+    console.log("Close Error:", closeErr);
+}
+
+main();
+
+Subscribe Option Greeks Feed
+
+const { Firstock, FirstockWebSocket } = require('./websockets');
+
+// Define callback method 
+function subscribeOptionGreeksData(data) {
+    console.log(data);
+}
+
+const userId = 'YOUR_USER_ID';
+
+const model = new FirstockWebSocket({
+    subscribe_option_greeks_data: subscribeOptionGreeksData,
+    option_greeks_tokens: ["NFO:44297"]
+});
+
+async function main() {
+    const [conn, err] = await Firstock.initializeWebsockets(userId, model);
+    console.log("Error:", err);
+
+    if (conn) {
+        const subscribeErr = await Firstock.subscribeOptionGreeks(conn, ["NFO:44298"]);
+        console.log("Subscribe Error:", subscribeErr);
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 25000));
+
+    // Unsubscribe
+    const unsubErr = await Firstock.unsubscribeOptionGreeks(conn, ["NFO:44297", "NFO:44298"]);
+    console.log("Unsubscribe Error:", unsubErr);
+
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    // Close WebSocket connection
+    const closeErr = await Firstock.closeWebsocket(conn);
+    console.log("Close Error:", closeErr);
+}
+
+main();
+
+```
+
 
 Refer to the [Firstock Connect Documentation](https://connect.thefirstock.com/)  for the complete list of supported methods.
 
