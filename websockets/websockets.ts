@@ -1,23 +1,8 @@
 import WebSocket from 'ws';
 import {
-    connections,
-    getUrlAndHeaderData,
-    readMessage,
-    subscribe as subscribeHelper,
-    unsubscribe as unsubscribeHelper,
-    subscribeOptionGreeks as subscribeOptionGreeksHelper,
-    unsubscribeOptionGreeks as unsubscribeOptionGreeksHelper,
     Config,
     WebSocketModel
 } from './websocket_functions';
-
-const logger = {
-    info: (msg: string) => console.info(`[INFO] ${new Date().toISOString()} - ${msg}`),
-    error: (msg: string, err?: Error) => {
-        console.error(`[ERROR] ${new Date().toISOString()} - ${msg}`);
-        if (err) console.error(err);
-    }
-};
 
 export class FirstockWebSocket {
     tokens?: string[];
