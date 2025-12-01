@@ -378,6 +378,38 @@ interface GetHoldingsParams {
         params: GetHoldingsParams,
         callBack: (error: Error | null, result: Response | null) => void
       ): void;
-  }
+
+      // WebSocket abstract methods
+    abstract initializeWebsockets(
+      userId: string,
+      model: any,
+      config?: any
+    ): Promise<[any | null, { error: { message: string } } | null]>;
+
+    abstract closeWebsocket(
+      ws: any | null
+    ): Promise<{ error: { message: string } } | null>;
+
+    abstract subscribe(
+      ws: any | null,
+      tokens: string[]
+    ): Promise<{ error: { message: string } } | null>;
+
+    abstract unsubscribe(
+      ws: any | null,
+      tokens: string[]
+    ): Promise<{ error: { message: string } } | null>;
+
+    abstract subscribeOptionGreeks(
+      ws: any | null,
+      tokens: string[]
+    ): Promise<{ error: { message: string } } | null>;
+
+    abstract unsubscribeOptionGreeks(
+      ws: any | null,
+      tokens: string[]
+    ): Promise<{ error: { message: string } } | null>;
+}
+  
   
   export default AFirstock;

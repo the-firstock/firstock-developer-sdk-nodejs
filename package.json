@@ -1,6 +1,6 @@
 {
   "name": "firstock",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Node js package for using firstock developer apis",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,6 +11,7 @@
     "LICENSE"
   ],
   "scripts": {
+    "test:ws": "ts-node test_websockets.js",
     "build": "tsc",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
