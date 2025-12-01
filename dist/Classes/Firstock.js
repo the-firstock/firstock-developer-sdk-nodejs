@@ -933,8 +933,8 @@ class Firstock extends AFirstock_1.default {
                         callBack(err, null);
                     }
                     else if (jKey) {
-                        axiosInterceptor
-                            .post(`productConversion`, {
+                        // Prepare the request payload
+                        const requestPayload = {
                             userId,
                             jKey,
                             exchange: params.exchange,
@@ -942,7 +942,13 @@ class Firstock extends AFirstock_1.default {
                             quantity: params.quantity,
                             product: params.product,
                             previousProduct: params.previousProduct,
-                        })
+                        };
+                        // Add msgFlag to payload if provided
+                        if (params.msgFlag) {
+                            requestPayload.msgFlag = params.msgFlag;
+                        }
+                        axiosInterceptor
+                            .post(`productConversion`, requestPayload)
                             .then((response) => {
                             const { data } = response;
                             callBack(null, data);
@@ -1764,6 +1770,54 @@ class Firstock extends AFirstock_1.default {
             }
             else {
                 callBack("No config data found", null);
+            }
+        });
+    }
+    /**
+     * Retrieves holdings details for a user from the Firstock API.
+     *
+     * This method sends a request to the Firstock holdingsDetails endpoint using the provided
+     * user ID and session token (jKey) retrieved from config.json. The response contains the user's holdings information.
+     *
+     * @param {Object} params - Holdings parameters.
+     * @param {string} params.userId - Firstock user ID (e.g., SU2707).
+     * @param {function} callBack - Callback with `(error, result)`:
+     * - `error`: Error object if the request fails.
+     * - `result`: Parsed response containing holdings information if successful.
+     */
+    getHoldingsDetails({ userId }, callBack) {
+        (0, commonFunction_1.readData)((err, data) => {
+            if (err) {
+                const errorMessage = err instanceof Error ? err.message : err;
+                callBack(new Error((0, commonFunction_1.errorMessageMapping)({ message: errorMessage })), null);
+            }
+            else if (data) {
+                (0, commonFunction_1.checkifUserLoggedIn)({ userId, jsonData: data }, (err, jKey) => {
+                    if (err) {
+                        callBack(new Error(err), null);
+                    }
+                    else if (jKey) {
+                        axiosInterceptor
+                            .post("holdingsDetails", {
+                            userId,
+                            jKey
+                        })
+                            .then((response) => {
+                            const { data } = response;
+                            this.userId = userId;
+                            callBack(null, data);
+                        })
+                            .catch((error) => {
+                            callBack((0, commonFunction_1.handleError)(error), null);
+                        });
+                    }
+                    else {
+                        callBack(new Error("No jKey found for userId in config.json"), null);
+                    }
+                });
+            }
+            else {
+                callBack(new Error("No config data found"), null);
             }
         });
     }

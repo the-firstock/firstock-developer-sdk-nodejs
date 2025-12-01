@@ -7,26 +7,30 @@ const index_1 = __importDefault(require("./index"));
 const firstock = new index_1.default();
 let orderNumber = "";
 const userDetails = {
-    userId: "",
-    password: "",
-    TOTP: "",
-    vendorCode: "",
-    apiKey: "",
+    userId: "NP2997",
+    password: "Skanda@2025",
+    TOTP: "1997",
+    vendorCode: "NP2997_API",
+    apiKey: "e55eb28e18ee1337fc0b2705f9b82465",
 };
-// Login and user Details start
-// firstock.login(
-//   {
-//     userId: userDetails.userId,
-//     password: userDetails.password,
-//     TOTP: userDetails.TOTP,
-//     vendorCode: userDetails.vendorCode,
-//     apiKey: userDetails.apiKey,
-//   },
-//   (err: Error | null, result: any) => {
-//     console.log("Error: ", err);
-//     console.log("Result: ", result);
-//   }
-// );
+// const userDetails = {
+//   userId: "",
+//   password: "",
+//   TOTP: "",
+//   vendorCode: "",
+//   apiKey: "",
+// };
+// // Login and user Details start
+firstock.login({
+    userId: userDetails.userId,
+    password: userDetails.password,
+    TOTP: userDetails.TOTP,
+    vendorCode: userDetails.vendorCode,
+    apiKey: userDetails.apiKey,
+}, (err, result) => {
+    console.log("Error: ", err);
+    console.log("Result: ", result);
+});
 // // Order and report start
 // firstock.placeOrder(
 //   {
@@ -153,6 +157,21 @@ const userDetails = {
 //   (err: Error | string | null, result: any) => {
 //     console.log("productConversion Error, ", err);
 //     console.log("productConversion Result: ", result);
+//   }
+// );
+// firstock.productConversion(
+//   {
+//     userId: userDetails.userId,
+//     exchange: "NFO",
+//     tradingSymbol: "NIFTY",
+//     quantity: "250",
+//     product: "C",
+//     previousProduct: "I",
+//     msgFlag: "1" // Buy and Day
+//   },
+//   (err: Error | string | null, result: any) => {
+//     console.log("productConversion (Buy & Day) Error: ", err);
+//     console.log("productConversion (Buy & Day) Result: ", result);
 //   }
 // );
 // Holdings
@@ -335,6 +354,16 @@ const userDetails = {
 //     console.log("brokerageCalculator Result: ", result)
 //   }
 // )
+// Get Holdings Details
+// firstock.getHoldingsDetails(
+//   {
+//     userId: userDetails.userId
+//     },
+//   (err: Error | null, result: any) => {
+//     console.log("Error: ", err);
+//     console.log("Result: ", result);
+//   }
+// );
 // Logout
 // firstock.logout(
 //   { userId: userDetails.userId },
