@@ -73,6 +73,7 @@ interface ProductConversionParams {
     previousProduct: string;
     transactionType?: string;
     positionType?: string;
+    msgFlag?: string;
     [key: string]: any;
 }
 interface OrderBookParams {
@@ -174,6 +175,10 @@ interface GetExpiryParams {
     userId: string;
     exchange: string;
     tradingSymbol: string;
+    [key: string]: any;
+}
+interface GetHoldingsParams {
+    userId: string;
     [key: string]: any;
 }
 export declare class Firstock extends AFirstock {
@@ -914,5 +919,18 @@ export declare class Firstock extends AFirstock {
      *                              On success, result contains detailed brokerage information.
      */
     brokerageCalculator(params: BrokerageCalculatorParams, callBack: (error: Error | string | null, result: any | null) => void): void;
+    /**
+     * Retrieves holdings details for a user from the Firstock API.
+     *
+     * This method sends a request to the Firstock holdingsDetails endpoint using the provided
+     * user ID and session token (jKey) retrieved from config.json. The response contains the user's holdings information.
+     *
+     * @param {Object} params - Holdings parameters.
+     * @param {string} params.userId - Firstock user ID (e.g., SU2707).
+     * @param {function} callBack - Callback with `(error, result)`:
+     * - `error`: Error object if the request fails.
+     * - `result`: Parsed response containing holdings information if successful.
+     */
+    getHoldingsDetails({ userId }: GetHoldingsParams, callBack: (error: Error | null, result: Response | null) => void): void;
 }
 export {};

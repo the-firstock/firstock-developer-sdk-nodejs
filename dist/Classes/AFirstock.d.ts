@@ -87,6 +87,7 @@ interface ProductConversionParams {
     previousProduct: string;
     transactionType?: string;
     positionType?: string;
+    msgFlag?: string;
     [key: string]: any;
 }
 interface OrderBookParams {
@@ -190,6 +191,10 @@ interface GetExpiryParams {
     tradingSymbol: string;
     [key: string]: any;
 }
+interface GetHoldingsParams {
+    userId: string;
+    [key: string]: any;
+}
 declare abstract class AFirstock {
     constructor();
     abstract getPosts(): Promise<any>;
@@ -223,5 +228,6 @@ declare abstract class AFirstock {
     abstract timePriceSeries(params: TimePriceSeriesParams, callBack: (error: Error | string | null, result: Response | null) => void): void;
     abstract getExpiry(params: GetExpiryParams, callBack: (error: Error | string | null, result: Response | null) => void): void;
     abstract brokerageCalculator(params: BrokerageCalculatorParams, callBack: (error: Error | string | null, result: Response | null) => void): void;
+    abstract getHoldingsDetails(params: GetHoldingsParams, callBack: (error: Error | null, result: Response | null) => void): void;
 }
 export default AFirstock;

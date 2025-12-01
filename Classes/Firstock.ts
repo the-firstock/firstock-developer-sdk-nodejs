@@ -1,9 +1,22 @@
 import axios, { AxiosInstance, AxiosError } from "axios";
 import * as sha256 from "sha256";
+import WebSocket from "ws";
 import AFirstock from "./AFirstock";
 import { saveData, readData, handleError, errorMessageMapping, checkifUserLoggedIn } from "../shared/commonFunction";
 import * as Commonfunctions from "../shared/commonFunction";
 import { API_LINK } from "../shared/constant";
+import { FirstockWebSocket } from "../websockets/websockets";
+import { 
+    getUrlAndHeaderData, 
+    subscribe as subscribeHelper, 
+    unsubscribe as unsubscribeHelper, 
+    subscribeOptionGreeks as subscribeOptionGreeksHelper, 
+    unsubscribeOptionGreeks as unsubscribeOptionGreeksHelper, 
+    readMessage,
+    connections,
+    Config,
+    WebSocketModel
+} from "../websockets/websocket_functions";
 
 interface Response {
   data: {
@@ -237,7 +250,18 @@ interface GetHoldingsParams {
   // jKey: string;
   [key: string]: any;
 }
-
+// interface Config {
+//   scheme?: string;
+//   host?: string;
+//   path?: string;
+//   source?: string;
+//   accept_encoding?: string;
+//   accept_language?: string;
+//   origin?: string;
+//   max_websocket_connection_retries?: number;
+//   time_interval?: number;
+//   [key: string]: any;
+// }
 const axiosInterceptor: AxiosInstance = axios.create({
   baseURL: API_LINK,
 });
@@ -2009,5 +2033,243 @@ getHoldingsDetails(
     }
   });
 }
+// WebSocket methods
+  
+  /**
+   * Initializes a WebSocket connection to Firstock for real-time market data streaming.
+   *
+   * @param {string} userId - The user ID for authentication.
+   * @param {FirstockWebSocket} model - WebSocket model containing tokens and subscriptions.
+   * @param {Config} [config] - Optional configuration for WebSocket connection.
+   * @returns {Promise<[WebSocket | null, { error: { message: string } } | null]>} 
+   *          A promise that resolves to a tuple containing the WebSocket instance (or null on error) 
+   *          and an error object (or null on success).
+   */
+  async initializeWebsockets(
+    userId: string,
+    model: FirstockWebSocket,
+    config?: Config
+  ): Promise<[WebSocket | null, { error: { message: string } } | null]> {
+    const finalConfig: Config = {
+      scheme: 'wss',
+      host: 'socket.firstock.in',
+      path: '/ws',
+      source: 'developer-api',
+      accept_encoding: 'gzip, deflate, br',
+      accept_language: 'en-US,en;q=0.9',
+      origin: 'https://firstock.in',
+      max_websocket_connection_retries: 3,
+      time_interval: 5,
+      ...config
+    };
+    
+    const [baseUrl, headers, err] = getUrlAndHeaderData(userId, finalConfig);
+    if (err) {
+      return [null, { error: { message: err.message } }];
+    }
+    
+    try {
+      const ws = new WebSocket(baseUrl, { headers });
+      
+      await new Promise<void>((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          reject(new Error('Connection timeout'));
+        }, 10000);
+        
+        ws.once('open', () => {
+          clearTimeout(timeout);
+          resolve();
+        });
+        
+        ws.once('error', (error) => {
+          clearTimeout(timeout);
+          reject(error);
+        });
+      });
+      
+      await connections.addConnection(ws);
+      
+      const msg = await new Promise<string>((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          reject(new Error('Authentication timeout'));
+        }, 5000);
+        
+        ws.once('message', (data) => {
+          clearTimeout(timeout);
+          resolve(data.toString());
+        });
+        
+        ws.once('error', (error) => {
+          clearTimeout(timeout);
+          reject(error);
+        });
+      });
+      
+      
+      if (msg.includes("Authentication successful")) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const modelDict = model.toDict();
+        readMessage(userId, ws, modelDict, finalConfig);
+        
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        if (model.tokens && model.tokens.length > 0) {
+          const subscribeErr = await subscribeHelper(ws, model.tokens);
+          if (subscribeErr) {
+          }
+        }
+        
+        if (model.option_greeks_tokens && model.option_greeks_tokens.length > 0) {
+          const subscribeErr = await subscribeOptionGreeksHelper(ws, model.option_greeks_tokens);
+          if (subscribeErr) {
+          }
+        }
+        
+        return [ws, null];
+      } else if (msg.includes("Maximum sessions limit")) {
+        await connections.deleteConnection(ws);
+        return [null, { error: { message: msg } }];
+      } else {
+        await connections.deleteConnection(ws);
+        return [null, { error: { message: `Unexpected authentication response: ${msg}` } }];
+      }
+    } catch (e) {
+      return [null, { error: { message: (e as Error).message } }];
+    }
+  }
+
+  /**
+   * Closes an active WebSocket connection.
+   *
+   * @param {WebSocket | null} ws - The WebSocket instance to close.
+   * @returns {Promise<{ error: { message: string } } | null>} 
+   *          A promise that resolves to an error object if closure fails, or null on success.
+   */
+  async closeWebsocket(ws: WebSocket | null): Promise<{ error: { message: string } } | null> {
+    if (ws === null) {
+      return {
+        error: {
+          message: "Connection does not exist"
+        }
+      };
+    }
+    
+    if (await connections.checkIfConnectionExists(ws)) {
+      try {
+        ws.close();
+        await connections.deleteConnection(ws);
+        return null;
+      } catch (e) {
+        const errorMsg = (e as Error).message.toLowerCase();
+        if (!errorMsg.includes("closed")) {
+          return {
+            error: {
+              message: (e as Error).message
+            }
+          };
+        } else {
+          await connections.deleteConnection(ws);
+          return null;
+        }
+      }
+    } else {
+      return {
+        error: {
+          message: "Connection does not exist"
+        }
+      };
+    }
+  }
+
+  /**
+   * Subscribes to market data for specified tokens.
+   *
+   * @param {WebSocket | null} ws - The WebSocket instance.
+   * @param {string[]} tokens - Array of token strings to subscribe to.
+   * @returns {Promise<{ error: { message: string } } | null>} 
+   *          A promise that resolves to an error object on failure, or null on success.
+   */
+  async subscribe(
+    ws: WebSocket | null,
+    tokens: string[]
+  ): Promise<{ error: { message: string } } | null> {
+    if (ws === null) {
+      return {
+        error: {
+          message: "Connection does not exist"
+        }
+      };
+    }
+    return subscribeHelper(ws, tokens);
+  }
+
+  /**
+   * Unsubscribes from market data for specified tokens.
+   *
+   * @param {WebSocket | null} ws - The WebSocket instance.
+   * @param {string[]} tokens - Array of token strings to unsubscribe from.
+   * @returns {Promise<{ error: { message: string } } | null>} 
+   *          A promise that resolves to an error object on failure, or null on success.
+   */
+  async unsubscribe(
+    ws: WebSocket | null,
+    tokens: string[]
+  ): Promise<{ error: { message: string } } | null> {
+    if (ws === null) {
+      return {
+        error: {
+          message: "Connection does not exist"
+        }
+      };
+    }
+    return unsubscribeHelper(ws, tokens);
+  }
+
+  /**
+   * Subscribes to option Greeks data for specified tokens.
+   *
+   * @param {WebSocket | null} ws - The WebSocket instance.
+   * @param {string[]} tokens - Array of option token strings to subscribe to.
+   * @returns {Promise<{ error: { message: string } } | null>} 
+   *          A promise that resolves to an error object on failure, or null on success.
+   */
+  async subscribeOptionGreeks(
+    ws: WebSocket | null,
+    tokens: string[]
+  ): Promise<{ error: { message: string } } | null> {
+    if (ws === null) {
+      return {
+        error: {
+          message: "Connection does not exist"
+        }
+      };
+    }
+    return subscribeOptionGreeksHelper(ws, tokens);
+  }
+
+  /**
+   * Unsubscribes from option Greeks data for specified tokens.
+   *
+   * @param {WebSocket | null} ws - The WebSocket instance.
+   * @param {string[]} tokens - Array of option token strings to unsubscribe from.
+   * @returns {Promise<{ error: { message: string } } | null>} 
+   *          A promise that resolves to an error object on failure, or null on success.
+   */
+  async unsubscribeOptionGreeks(
+    ws: WebSocket | null,
+    tokens: string[]
+  ): Promise<{ error: { message: string } } | null> {
+    if (ws === null) {
+      return {
+        error: {
+          message: "Connection does not exist"
+        }
+      };
+    }
+    return unsubscribeOptionGreeksHelper(ws, tokens);
+  }
 }
+
+
 

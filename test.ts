@@ -3,13 +3,13 @@ import Firstock from "./index";
 const firstock = new Firstock();
 
 let orderNumber: string = "";
-// const userDetails = {
-//   userId: "NP2997",
-//   password: "Skanda@202",
-//   TOTP: "1997",
-//   vendorCode: "NP2997_API",
-//   apiKey: "65d837ab42a4b0000fbe05f37ee575fb",
-// };
+const userDetails = {
+  userId: "NP2997",
+  password: "Skanda@2025",
+  TOTP: "1997",
+  vendorCode: "NP2997_API",
+  apiKey: "e55eb28e18ee1337fc0b2705f9b82465",
+};
 // const userDetails = {
 //   userId: "",
 //   password: "",
@@ -18,19 +18,19 @@ let orderNumber: string = "";
 //   apiKey: "",
 // };
 // // Login and user Details start
-// firstock.login(
-//   {
-//     userId: userDetails.userId,
-//     password: userDetails.password,
-//     TOTP: userDetails.TOTP,
-//     vendorCode: userDetails.vendorCode,
-//     apiKey: userDetails.apiKey,
-//   },
-//   (err: Error | null, result: any) => {
-//     console.log("Error: ", err);
-//     console.log("Result: ", result);
-//   }
-// );
+firstock.login(
+  {
+    userId: userDetails.userId,
+    password: userDetails.password,
+    TOTP: userDetails.TOTP,
+    vendorCode: userDetails.vendorCode,
+    apiKey: userDetails.apiKey,
+  },
+  (err: Error | null, result: any) => {
+    console.log("Error: ", err);
+    console.log("Result: ", result);
+  }
+);
 
 // // Order and report start
 // firstock.placeOrder(
