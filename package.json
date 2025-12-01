@@ -1,11 +1,18 @@
 {
   "name": "firstock",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Node js package for using firstock developer apis",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "commonjs",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
