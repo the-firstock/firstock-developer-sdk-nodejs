@@ -1,5 +1,5 @@
-import {Firstock} from "./Classes/Firstock";
+import { Firstock } from "./Classes/Firstock";
+import { FirstockWebSocket } from "./websockets/websockets";
 
-
-
-export = Firstock;
+export { Firstock, FirstockWebSocket };
+export default Firstock;
