@@ -5,7 +5,7 @@ To communicate with the Firstock Developer API using Nodejs, you can use the off
 Licensed under the MIT License.
 
 
-[Version - 1.0.5](https://www.npmjs.com/package/firstock)
+[Version - 1.0.7](https://www.npmjs.com/package/firstock)
 
 
 ## Documentation
