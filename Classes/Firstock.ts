@@ -2052,7 +2052,7 @@ getHoldingsDetails(
   ): Promise<[WebSocket | null, { error: { message: string } } | null]> {
     const finalConfig: Config = {
       scheme: 'wss',
-      host: 'socket.firstock.in',
+      host: 'socket.firstock.in/V2', 
       path: '/ws',
       source: 'developer-api',
       accept_encoding: 'gzip, deflate, br',

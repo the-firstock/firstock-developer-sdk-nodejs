@@ -231,7 +231,7 @@ function _clearShutdownFlag(ws: WebSocket): void {
 
 export function getUrlAndHeaderData(userId: string, config: Config): [string, any, Error | null] {
     const scheme = config.scheme || 'wss';
-    const host = config.host || 'socket.firstock.in';
+    const host = config.host || 'socket.firstock.in/V2';
     const path = config.path || '/ws';
     const srcVal = config.source || 'API';
     const acceptEncoding = config.accept_encoding || 'gzip, deflate, br';
