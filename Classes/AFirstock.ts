@@ -230,6 +230,13 @@ interface GetHoldingsParams {
   // jKey: string;
   [key: string]: any;
 }
+
+interface GetFundamentalsParams {
+  userId: string;
+  exchange: string;
+  tradingSymbol: string;
+  [key: string]: any;
+}
   
   
   abstract class AFirstock {
@@ -409,6 +416,11 @@ interface GetHoldingsParams {
       ws: any | null,
       tokens: string[]
     ): Promise<{ error: { message: string } } | null>;
+
+    abstract getFundamentals(
+      params: GetFundamentalsParams,
+      callBack: (error: Error | string | null, result: Response | null) => void
+    ): void;
 }
   
   

@@ -245,6 +245,13 @@ interface GetExpiryParams {
   [key: string]: any;
 }
 
+interface GetFundamentalsParams {
+  userId: string;
+  exchange: string;
+  tradingSymbol: string;
+  [key: string]: any;
+}
+
 interface GetHoldingsParams {
   userId: string;
   // jKey: string;
@@ -2268,6 +2275,61 @@ getHoldingsDetails(
       };
     }
     return unsubscribeOptionGreeksHelper(ws, tokens);
+  }
+
+  /**
+ * Retrieves fundamental data for a security including company profile, financial ratios, and performance metrics.
+ *
+ * This method fetches comprehensive fundamental analysis data such as market cap, ROE, P/E ratios,
+ * profit growth, debt ratios, and historical EPS/book value data for the specified security.
+ *
+ * @param {Object} params - Fundamental data request parameters.
+ * @param {string} params.userId - Firstock user ID.
+ * @param {string} params.exchange - Exchange code (e.g., "NSE", "BSE").
+ * @param {string} params.tradingSymbol - Trading symbol of the security (e.g., "RELIANCE-EQ").
+ *
+ * @param {function} callBack - Callback with `(error, result)`:
+ * - `error`: Error object if request fails.
+ * - `result`: Object containing fundamental data including:
+ *   - mcap: Market capitalization
+ *   - company_profile: Company details and business description
+ *   - isin_code: ISIN identifier
+ *   - roe: Return on Equity
+ *   - index_mapped: List of indices the stock is part of
+ *   - calculations: Financial metrics including EPS, OPM, P/E, P/B ratios, growth rates, etc.
+ */
+  getFundamentals(
+  { userId, exchange, tradingSymbol, ...otherParams }: GetFundamentalsParams,
+  callBack: (error: Error | string | null, result: Response | null) => void
+): void {
+  readData((err: string | Error | null, jsonData: ConfigData | null) => {
+    if (err) {
+      callBack(err instanceof Error ? err : new Error(err as string), null);
+      return;
+    }
+
+    const jKey = jsonData?.[userId]?.jKey || this.token;
+
+    if (!jKey) {
+      callBack(new Error("Authentication token not found. Please login first."), null);
+      return;
+    }
+
+    axiosInterceptor
+      .post<Response>('getFundamentals', {
+        userId,
+        jKey,
+        exchange,
+        tradingSymbol,
+        ...otherParams,
+      })
+      .then((response: { data: Response }) => {
+        callBack(null, response.data);
+      })
+      .catch((error: AxiosError) => {
+        callBack(handleError(error), null);
+      });
+  });
   }
 }
 
