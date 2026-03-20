@@ -237,6 +237,46 @@ interface GetFundamentalsParams {
   tradingSymbol: string;
   [key: string]: any;
 }
+
+interface PlaceAMOParams {
+  userId: string;
+  exchange: string;
+  retention: string;
+  product: string;
+  priceType: string;
+  tradingSymbol: string;
+  transactionType: string;
+  price: string;
+  triggerPrice: string;
+  quantity: string;
+  remarks: string;
+  [key: string]: any;
+}
+
+interface ModifyAMOParams {
+  userId: string;
+  orderNumber: string;
+  exchange: string;
+  tradingSymbol: string;
+  quantity: string;
+  price: string;
+  priceType: string;
+  product: string;
+  transactionType: string;
+  retention: string;
+  triggerPrice: string;
+  [key: string]: any;
+}
+
+interface OptionChainGreeksParams {
+  userId: string;
+  exchange: string;
+  symbol: string;
+  expiry: string;
+  count: string;
+  strikePrice: string;
+  [key: string]: any;
+}
   
   
   abstract class AFirstock {
@@ -419,6 +459,21 @@ interface GetFundamentalsParams {
 
     abstract getFundamentals(
       params: GetFundamentalsParams,
+      callBack: (error: Error | string | null, result: Response | null) => void
+    ): void;
+
+    abstract placeAMO(
+      params: PlaceAMOParams,
+      callBack: (error: Error | string | null, result: Response | null) => void
+    ): void;
+    
+    abstract modifyAMO(
+      params: ModifyAMOParams,
+      callBack: (error: Error | string | null, result: Response | null) => void
+    ): void;
+    
+    abstract optionChainGreeks(
+      params: OptionChainGreeksParams,
       callBack: (error: Error | string | null, result: Response | null) => void
     ): void;
 }

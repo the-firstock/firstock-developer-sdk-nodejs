@@ -252,6 +252,46 @@ interface GetFundamentalsParams {
   [key: string]: any;
 }
 
+interface PlaceAMOParams {
+  userId: string;
+  exchange: string;
+  retention: string;
+  product: string;
+  priceType: string;
+  tradingSymbol: string;
+  transactionType: string;
+  price: string;
+  triggerPrice: string;
+  quantity: string;
+  remarks: string;
+  [key: string]: any;
+}
+
+interface ModifyAMOParams {
+  userId: string;
+  orderNumber: string;
+  exchange: string;
+  tradingSymbol: string;
+  quantity: string;
+  price: string;
+  priceType: string;
+  product: string;
+  transactionType: string;
+  retention: string;
+  triggerPrice: string;
+  [key: string]: any;
+}
+
+interface OptionChainGreeksParams {
+  userId: string;
+  exchange: string;
+  symbol: string;
+  expiry: string;
+  count: string;
+  strikePrice: string;
+  [key: string]: any;
+}
+
 interface GetHoldingsParams {
   userId: string;
   // jKey: string;
@@ -2331,6 +2371,194 @@ getHoldingsDetails(
       });
   });
   }
+
+  /**
+ * Places an After Market Order (AMO) on the Firstock trading platform.
+ *
+ * @param {Object} params - Required order parameters.
+ * @param {string} params.userId - Firstock user ID.
+ * @param {string} params.exchange - Exchange (e.g., "NSE", "BSE", "NFO").
+ * @param {string} params.retention - Order validity ("DAY", "IOC").
+ * @param {string} params.product - Product type ("C", "I", "M").
+ * @param {string} params.priceType - Order type ("MKT", "LMT", "SL-MKT", "SL-LMT").
+ * @param {string} params.tradingSymbol - Instrument symbol (e.g., "IDEA-EQ").
+ * @param {string} params.transactionType - "B" (Buy) or "S" (Sell).
+ * @param {string} params.price - Order price (0 for market orders).
+ * @param {string} params.triggerPrice - Trigger price for stop-loss orders (0 for others).
+ * @param {string} params.quantity - Quantity of shares or lots.
+ * @param {string} params.remarks - Optional order remark.
+ *
+ * @param {function} callBack - Callback function.
+ * @param {Error|string|null} callBack.error - Error message, if any.
+ * @param {Response|null} callBack.result - Response data containing order details.
+ */
+placeAMO(
+  params: PlaceAMOParams,
+  callBack: (error: Error | string | null, result: Response | null) => void
+): void {
+  const currentUserId = params.userId;
+  readData((err: Error | string | null, data: ConfigData | null) => {
+    if (err) {
+      callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
+    } else if (data) {
+      const userId = currentUserId;
+      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+        if (err) {
+          callBack(err, null);
+        } else if (jKey) {
+          axiosInterceptor
+            .post<Response>(`placeAMO`, {
+              userId,
+              jKey,
+              exchange: params.exchange,
+              tradingSymbol: params.tradingSymbol,
+              quantity: params.quantity,
+              price: params.price,
+              product: params.product,
+              transactionType: params.transactionType,
+              priceType: params.priceType,
+              retention: params.retention,
+              remarks: params.remarks,
+              triggerPrice: params.triggerPrice,
+            })
+            .then((response) => {
+              const { data } = response;
+              callBack(null, data);
+            })
+            .catch((error: AxiosError) => {
+              callBack(handleError(error), null);
+            });
+        } else {
+          callBack("No jKey found", null);
+        }
+      });
+    } else {
+      callBack("No config data found", null);
+    }
+  });
+}
+
+/**
+ * Modifies an existing After Market Order (AMO) on the Firstock trading platform.
+ *
+ * @param {Object} params - Required order parameters.
+ * @param {string} params.userId - Firstock user ID.
+ * @param {string} params.orderNumber - The order number to modify.
+ * @param {string} params.exchange - Exchange (e.g., "NSE", "BSE", "NFO").
+ * @param {string} params.tradingSymbol - Instrument symbol (e.g., "IDEA-EQ").
+ * @param {string} params.quantity - Updated quantity.
+ * @param {string} params.price - Updated price.
+ * @param {string} params.priceType - Order type ("MKT", "LMT", "SL-MKT", "SL-LMT").
+ * @param {string} params.product - Product type ("C", "I", "M").
+ * @param {string} params.transactionType - "B" (Buy) or "S" (Sell).
+ * @param {string} params.retention - Order validity ("DAY", "IOC").
+ * @param {string} params.triggerPrice - Updated trigger price.
+ *
+ * @param {function} callBack - Callback function.
+ * @param {Error|string|null} callBack.error - Error message, if any.
+ * @param {Response|null} callBack.result - Response data containing modified order details.
+ */
+modifyAMO(
+  params: ModifyAMOParams,
+  callBack: (error: Error | string | null, result: Response | null) => void
+): void {
+  const currentUserId = params.userId;
+  readData((err: Error | string | null, data: ConfigData | null) => {
+    if (err) {
+      callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
+    } else if (data) {
+      const userId = currentUserId;
+      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+        if (err) {
+          callBack(err, null);
+        } else if (jKey) {
+          axiosInterceptor
+            .post<Response>(`modifyAMO`, {
+              userId,
+              jKey,
+              orderNumber: params.orderNumber,
+              exchange: params.exchange,
+              tradingSymbol: params.tradingSymbol,
+              quantity: params.quantity,
+              price: params.price,
+              priceType: params.priceType,
+              product: params.product,
+              transactionType: params.transactionType,
+              retention: params.retention,
+              triggerPrice: params.triggerPrice,
+            })
+            .then((response) => {
+              const { data } = response;
+              callBack(null, data);
+            })
+            .catch((error: AxiosError) => {
+              callBack(handleError(error), null);
+            });
+        } else {
+          callBack("No jKey found", null);
+        }
+      });
+    } else {
+      callBack("No config data found", null);
+    }
+  });
+}
+
+/**
+ * Fetches option chain data with Greeks for a given symbol and expiry.
+ *
+ * @param {Object} params - Required parameters.
+ * @param {string} params.userId - Firstock user ID.
+ * @param {string} params.exchange - Exchange (e.g., "NFO").
+ * @param {string} params.symbol - Underlying symbol (e.g., "NIFTY", "BANKNIFTY").
+ * @param {string} params.expiry - Expiry date in format "17MAR26".
+ * @param {string} params.count - Number of strikes above and below ATM (e.g., "10").
+ * @param {string} params.strikePrice - ATM strike price (e.g., "25500").
+ *
+ * @param {function} callBack - Callback function.
+ * @param {Error|string|null} callBack.error - Error message, if any.
+ * @param {Response|null} callBack.result - Response data containing option chain with Greeks.
+ */
+optionChainGreeks(
+  params: OptionChainGreeksParams,
+  callBack: (error: Error | string | null, result: Response | null) => void
+): void {
+  const currentUserId = params.userId;
+  readData((err: Error | string | null, data: ConfigData | null) => {
+    if (err) {
+      callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
+    } else if (data) {
+      const userId = currentUserId;
+      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+        if (err) {
+          callBack(err, null);
+        } else if (jKey) {
+          axiosInterceptor
+            .post<Response>(`optionChainGreeks`, {
+              userId,
+              jKey,
+              exchange: params.exchange,
+              symbol: params.symbol,
+              expiry: params.expiry,
+              count: params.count,
+              strikePrice: params.strikePrice,
+            })
+            .then((response) => {
+              const { data } = response;
+              callBack(null, data);
+            })
+            .catch((error: AxiosError) => {
+              callBack(handleError(error), null);
+            });
+        } else {
+          callBack("No jKey found", null);
+        }
+      });
+    } else {
+      callBack("No config data found", null);
+    }
+  });
+}
 }
 
 
