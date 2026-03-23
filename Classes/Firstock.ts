@@ -2477,16 +2477,12 @@ modifyAMO(
               userId,
               jKey,
               orderNumber: params.orderNumber,
-              exchange: params.exchange,
-              tradingSymbol: params.tradingSymbol,
               quantity: params.quantity,
               price: params.price,
               priceType: params.priceType,
               product: params.product,
-              transactionType: params.transactionType,
-              retention: params.retention,
               triggerPrice: params.triggerPrice,
-            })
+})
             .then((response) => {
               const { data } = response;
               callBack(null, data);
