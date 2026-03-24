@@ -4,11 +4,11 @@ const firstock = new Firstock();
 
 let orderNumber: string = "";
 const userDetails = {
-  userId: "NP2997",
-  password: "Skanda@2025",
-  TOTP: "1997",
-  vendorCode: "NP2997_API",
-  apiKey: "e55eb28e18ee1337fc0b2705f9b82465",
+  userId: "your_user_ID",
+  password: "your_password",
+  TOTP: "your_TOTP",
+  vendorCode: "Your_Vendor_code",
+  apiKey: "your_apiKey",
 };
 // const userDetails = {
 //   userId: "",

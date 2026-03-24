@@ -256,14 +256,10 @@ interface PlaceAMOParams {
 interface ModifyAMOParams {
   userId: string;
   orderNumber: string;
-  exchange: string;
-  tradingSymbol: string;
   quantity: string;
   price: string;
   priceType: string;
   product: string;
-  transactionType: string;
-  retention: string;
   triggerPrice: string;
   [key: string]: any;
 }
