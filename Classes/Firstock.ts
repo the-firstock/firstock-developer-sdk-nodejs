@@ -288,6 +288,61 @@ interface OptionChainGreeksParams {
   [key: string]: any;
 }
 
+interface PlaceGTTOrderParams {
+  userId: string;
+  tradingSymbol: string;
+  exchange: string;
+  validity: string;
+  value: string;
+  remarks?: string;
+  OrderParams: {
+    exchange: string;
+    tradingSymbol: string;
+    transactionType: string;
+    product: string;
+    priceType: string;
+    price: string;
+    triggerPrice: string;
+    quantity: string;
+    retention?: string;
+    remarks?: string;
+  };
+  [key: string]: any;
+}
+
+interface ModifyGTTOrderParams {
+  userId: string;
+  GTTid: string;
+  tradingSymbol: string;
+  exchange: string;
+  validity: string;
+  remarks?: string;
+  OrderParams: {
+    exchange: string;
+    tradingSymbol: string;
+    transactionType: string;
+    product: string;
+    priceType: string;
+    price: string;
+    triggerPrice: string;
+    quantity: string;
+    retention?: string;
+    remarks?: string;
+  };
+  [key: string]: any;
+}
+
+interface GetGTTOrdersParams {
+  userId: string;
+  [key: string]: any;
+}
+
+interface CancelGTTOrderParams {
+  userId: string;
+  GTTid: string;
+  [key: string]: any;
+}
+
 interface GetHoldingsParams {
   userId: string;
   // jKey: string;
@@ -2551,6 +2606,167 @@ optionChainGreeks(
     }
   });
 }
+
+placeGTTOrder(
+  params: PlaceGTTOrderParams,
+  callBack: (error: Error | string | null, result: Response | null) => void
+): void {
+  const currentUserId = params.userId;
+  readData((err: Error | string | null, data: ConfigData | null) => {
+    if (err) {
+      callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
+    } else if (data) {
+      const userId = currentUserId;
+      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+        if (err) {
+          callBack(err, null);
+        } else if (jKey) {
+          axiosInterceptor
+            .post<Response>(`placeGttOrder`, {
+              userId,
+              jKey,
+              tradingSymbol: params.tradingSymbol,
+              exchange: params.exchange,
+              validity: params.validity,
+              value: params.value,
+              ...(params.remarks && { remarks: params.remarks }),
+              OrderParams: params.OrderParams,
+            })
+            .then((response) => {
+              const { data } = response;
+              callBack(null, data);
+            })
+            .catch((error: AxiosError) => {
+              callBack(handleError(error), null);
+            });
+        } else {
+          callBack("No jKey found", null);
+        }
+      });
+    } else {
+      callBack("No config data found", null);
+    }
+  });
+}
+
+
+modifyGTTOrder(
+  params: ModifyGTTOrderParams,
+  callBack: (error: Error | string | null, result: Response | null) => void
+): void {
+  const currentUserId = params.userId;
+  readData((err: Error | string | null, data: ConfigData | null) => {
+    if (err) {
+      callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
+    } else if (data) {
+      const userId = currentUserId;
+      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+        if (err) {
+          callBack(err, null);
+        } else if (jKey) {
+          axiosInterceptor
+              .post<Response>(`modifyGttOrder`, {
+                userId,
+                jKey,
+                GTTid: params.GTTid,
+                tradingSymbol: params.tradingSymbol,
+                exchange: params.exchange,
+                validity: params.validity,
+                ...(params.remarks && { remarks: params.remarks }),
+                OrderParams: params.OrderParams,
+              })
+            .then((response) => {
+              const { data } = response;
+              callBack(null, data);
+            })
+            .catch((error: AxiosError) => {
+              callBack(handleError(error), null);
+            });
+        } else {
+          callBack("No jKey found", null);
+        }
+      });
+    } else {
+      callBack("No config data found", null);
+    }
+  });
+}
+
+
+getGTTOrders(
+  params: GetGTTOrdersParams,
+  callBack: (error: Error | string | null, result: Response | null) => void
+): void {
+  const currentUserId = params.userId;
+  readData((err: Error | string | null, data: ConfigData | null) => {
+    if (err) {
+      callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
+    } else if (data) {
+      const userId = currentUserId;
+      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+        if (err) {
+          callBack(err, null);
+        } else if (jKey) {
+          axiosInterceptor
+            .post<Response>(`GttOrderBook`, {
+              userId,
+              jKey,
+            })
+            .then((response) => {
+              const { data } = response;
+              callBack(null, data);
+            })
+            .catch((error: AxiosError) => {
+              callBack(handleError(error), null);
+            });
+        } else {
+          callBack("No jKey found", null);
+        }
+      });
+    } else {
+      callBack("No config data found", null);
+    }
+  });
+}
+
+cancelGTTOrder(
+  params: CancelGTTOrderParams,
+  callBack: (error: Error | string | null, result: Response | null) => void
+): void {
+  const currentUserId = params.userId;
+  readData((err: Error | string | null, data: ConfigData | null) => {
+    if (err) {
+      callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
+    } else if (data) {
+      const userId = currentUserId;
+      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+        if (err) {
+          callBack(err, null);
+        } else if (jKey) {
+          axiosInterceptor
+            .post<Response>(`cancelGttOrder`, {
+              userId,
+              jKey,
+              GTTid: params.GTTid,
+            })
+            .then((response) => {
+              const { data } = response;
+              callBack(null, data);
+            })
+            .catch((error: AxiosError) => {
+              callBack(handleError(error), null);
+            });
+        } else {
+          callBack("No jKey found", null);
+        }
+      });
+    } else {
+      callBack("No config data found", null);
+    }
+  });
+}
+
+
 }
 
 
