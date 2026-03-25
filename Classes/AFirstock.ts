@@ -280,8 +280,8 @@ interface PlaceGTTOrderParams {
   tradingSymbol: string;
   exchange: string;
   validity: string;
-  ltp: string;
-  Token: string;
+  value: string;
+  remarks?: string;
   OrderParams: {
     exchange: string;
     tradingSymbol: string;
@@ -292,24 +292,8 @@ interface PlaceGTTOrderParams {
     triggerPrice: string;
     quantity: string;
     retention?: string;
-    customer_firm?: string;
-    dscqty?: string;
     remarks?: string;
-    ordersource?: string;
-    book_profit_price?: string;
-    book_loss_price?: string;
-    trailing_price?: string;
-    channel?: string;
-    usr_agent?: string;
-    app_inst_id?: string;
-    ip_address?: string;
-    auction_number?: string;
   };
-  AlName?: string;
-  d?: string;
-  VariableName?: string;
-  RemarksText?: string;
-  GTTid?: string;
   [key: string]: any;
 }
 
@@ -320,8 +304,7 @@ interface ModifyGTTOrderParams {
   tradingSymbol: string;
   exchange: string;
   validity: string;
-  ltp: string;
-  Token: string;
+  remarks?: string;
   OrderParams: {
     exchange: string;
     tradingSymbol: string;
@@ -332,26 +315,10 @@ interface ModifyGTTOrderParams {
     triggerPrice: string;
     quantity: string;
     retention?: string;
-    customer_firm?: string;
-    dscqty?: string;
     remarks?: string;
-    ordersource?: string;
-    book_profit_price?: string;
-    book_loss_price?: string;
-    trailing_price?: string;
-    channel?: string;
-    usr_agent?: string;
-    app_inst_id?: string;
-    ip_address?: string;
-    auction_number?: string;
   };
-  AlName?: string;
-  d?: string;
-  VariableName?: string;
-  RemarksText?: string;
   [key: string]: any;
 }
-
 interface GetGTTOrdersParams {
   userId: string;
   [key: string]: any;

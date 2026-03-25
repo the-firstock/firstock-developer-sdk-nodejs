@@ -257,6 +257,19 @@ firstock.optionChain({
   console.log("optionChain Result: ", result);
 });
 
+// Option Chain Greeks
+firstock.optionChainGreeks({
+  userId: "",
+  exchange: "",
+  symbol: "",
+  expiry: "",
+  count: "",
+  strikePrice: ""
+}, (err, result) => {
+  console.log("optionChainGreeks Error, ", err);
+  console.log("optionChainGreeks Result: ", result);
+});
+
 // Search Scrips
 firstock.searchScrips({ userId: "", stext: "" }, (err, result) => {
   console.log("searchScrips Error, ", err);
@@ -275,6 +288,107 @@ firstock.timePriceSeries({
   console.log("timePriceSeries Error, ", err);
   console.log("timePriceSeries Result: ", result);
 });
+
+// Place AMO
+firstock.placeAMO({
+  userId: "",
+  exchange: "",
+  tradingSymbol: "",
+  quantity: "",
+  price: "",
+  product: "",
+  transactionType: "",
+  priceType: "",
+  retention: "",
+  triggerPrice: "",
+  remarks: "",
+}, (err, result) => {
+  console.log("placeAMO Error, ", err);
+  console.log("placeAMO Result: ", result);
+});
+
+// Modify AMO
+firstock.modifyAMO({
+  userId: "",
+  orderNumber: "",
+  quantity: "",
+  price: "",
+  priceType: "",
+  product: "",
+  triggerPrice: "",
+}, (err, result) => {
+  console.log("modifyAMO Error, ", err);
+  console.log("modifyAMO Result: ", result);
+});
+
+// Place GTT Order
+firstock.placeGTTOrder({
+  userId: "",
+  tradingSymbol: "",
+  exchange: "",
+  validity: "GTT",
+  value: "",
+  remarks: "",
+  OrderParams: {
+    exchange: "",
+    tradingSymbol: "",
+    transactionType: "",
+    product: "",
+    priceType: "",
+    price: "",
+    triggerPrice: "",
+    quantity: "",
+    retention: "",
+    remarks: "",
+  },
+}, (err, result) => {
+  console.log("placeGTTOrder Error, ", err);
+  console.log("placeGTTOrder Result: ", result);
+});
+
+// Modify GTT Order
+firstock.modifyGTTOrder({
+  userId: "",
+  GTTid: "",
+  tradingSymbol: "",
+  exchange: "",
+  validity: "GTT",
+  remarks: "",
+  OrderParams: {
+    exchange: "",
+    tradingSymbol: "",
+    transactionType: "",
+    product: "",
+    priceType: "",
+    price: "",
+    triggerPrice: "",
+    quantity: "",
+    retention: "",
+    remarks: "",
+  },
+}, (err, result) => {
+  console.log("modifyGTTOrder Error, ", err);
+  console.log("modifyGTTOrder Result: ", result);
+});
+
+// Get GTT Orders
+firstock.getGTTOrders({
+  userId: "",
+}, (err, result) => {
+  console.log("getGTTOrders Error, ", err);
+  console.log("getGTTOrders Result: ", result);
+});
+
+// Cancel GTT Order
+firstock.cancelGTTOrder({
+  userId: "",
+  GTTid: "",
+}, (err, result) => {
+  console.log("cancelGTTOrder Error, ", err);
+  console.log("cancelGTTOrder Result: ", result);
+});
+
+
 ```
 
 ```javascript
