@@ -763,21 +763,25 @@ export class Firstock extends AFirstock {
           if (err) {
             callBack(err, null);
           } else if (jKey) {
+            const payload: Record<string, any> = {
+              userId,
+              jKey,
+              exchange: params.exchange,
+              tradingSymbol: params.tradingSymbol,
+              quantity: params.quantity,
+              price: params.price,
+              product: params.product,
+              transactionType: params.transactionType,
+              priceType: params.priceType,
+              retention: params.retention,
+              remarks: params.remarks,
+              triggerPrice: params.triggerPrice,
+            };
+            if (params.mkt_protection !== undefined) {
+              payload.mktProtection = params.mkt_protection;
+            }
             axiosInterceptor
-              .post<Response>(`placeOrder`, {
-                userId,
-                jKey,
-                exchange: params.exchange,
-                tradingSymbol: params.tradingSymbol,
-                quantity: params.quantity,
-                price: params.price,
-                product: params.product,
-                transactionType: params.transactionType,
-                priceType: params.priceType,
-                retention: params.retention,
-                remarks: params.remarks,
-                triggerPrice: params.triggerPrice,
-              })
+              .post<Response>(`placeOrder`, payload)
               .then((response) => {
                 const { data } = response;
                 callBack(null, data);
@@ -794,6 +798,8 @@ export class Firstock extends AFirstock {
       }
     });
   }
+
+
   /**
    * Fetches the margin requirements for a prospective order on the Firstock trading platform.
    *
@@ -1021,18 +1027,23 @@ export class Firstock extends AFirstock {
           if (err) {
             callBack(err, null);
           } else if (jKey) {
+            const payload: Record<string, any> = {
+              userId,
+              jKey,
+              orderNumber: params.orderNumber,
+              quantity: params.quantity,
+              price: params.price,
+              product: params.product,
+              triggerPrice: params.triggerPrice,
+              tradingSymbol: params.tradingSymbol,
+              priceType: params.priceType,
+              retention: params.retention,
+            };
+            if (params.mkt_protection !== undefined) {
+              payload.mktProtection = params.mkt_protection;
+            }
             axiosInterceptor
-              .post<Response>(`modifyOrder`, {
-                userId,
-                jKey,
-                quantity: params.quantity,
-                price: params.price,
-                triggerPrice: params.triggerPrice,
-                orderNumber: params.orderNumber,
-                exchange: params.exchange,
-                tradingSymbol: params.tradingSymbol,
-                priceType: params.priceType,
-              })
+              .post<Response>(`modifyOrder`, payload)
               .then((response) => {
                 const { data } = response;
                 callBack(null, data);
@@ -1049,6 +1060,8 @@ export class Firstock extends AFirstock {
       }
     });
   }
+
+
 /**
  * Fetches detailed history of a specific order including each step or fill event.
  *
@@ -2443,22 +2456,21 @@ getHoldingsDetails(
  * @param {Error|string|null} callBack.error - Error message, if any.
  * @param {Response|null} callBack.result - Response data containing order details.
  */
-placeAMO(
-  params: PlaceAMOParams,
-  callBack: (error: Error | string | null, result: Response | null) => void
-): void {
-  const currentUserId = params.userId;
-  readData((err: Error | string | null, data: ConfigData | null) => {
-    if (err) {
-      callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
-    } else if (data) {
-      const userId = currentUserId;
-      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
-        if (err) {
-          callBack(err, null);
-        } else if (jKey) {
-          axiosInterceptor
-            .post<Response>(`placeAMO`, {
+  placeAMO(
+    params: PlaceAMOParams,
+    callBack: (error: Error | string | null, result: Response | null) => void
+  ): void {
+    const currentUserId = params.userId;
+    readData((err: Error | string | null, data: ConfigData | null) => {
+      if (err) {
+        callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
+      } else if (data) {
+        const userId = currentUserId;
+        checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+          if (err) {
+            callBack(err, null);
+          } else if (jKey) {
+            const payload: Record<string, any> = {
               userId,
               jKey,
               exchange: params.exchange,
@@ -2471,23 +2483,28 @@ placeAMO(
               retention: params.retention,
               remarks: params.remarks,
               triggerPrice: params.triggerPrice,
-            })
-            .then((response) => {
-              const { data } = response;
-              callBack(null, data);
-            })
-            .catch((error: AxiosError) => {
-              callBack(handleError(error), null);
-            });
-        } else {
-          callBack("No jKey found", null);
-        }
-      });
-    } else {
-      callBack("No config data found", null);
-    }
-  });
-}
+            };
+            if (params.mkt_protection !== undefined) {
+              payload.mktProtection = params.mkt_protection;
+            }
+            axiosInterceptor
+              .post<Response>(`placeAMO`, payload)
+              .then((response) => {
+                const { data } = response;
+                callBack(null, data);
+              })
+              .catch((error: AxiosError) => {
+                callBack(handleError(error), null);
+              });
+          } else {
+            callBack("No jKey found", null);
+          }
+        });
+      } else {
+        callBack("No config data found", null);
+      }
+    });
+  }
 
 /**
  * Modifies an existing After Market Order (AMO) on the Firstock trading platform.
@@ -2509,22 +2526,21 @@ placeAMO(
  * @param {Error|string|null} callBack.error - Error message, if any.
  * @param {Response|null} callBack.result - Response data containing modified order details.
  */
-modifyAMO(
-  params: ModifyAMOParams,
-  callBack: (error: Error | string | null, result: Response | null) => void
-): void {
-  const currentUserId = params.userId;
-  readData((err: Error | string | null, data: ConfigData | null) => {
-    if (err) {
-      callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
-    } else if (data) {
-      const userId = currentUserId;
-      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
-        if (err) {
-          callBack(err, null);
-        } else if (jKey) {
-          axiosInterceptor
-            .post<Response>(`modifyAMO`, {
+  modifyAMO(
+    params: ModifyAMOParams,
+    callBack: (error: Error | string | null, result: Response | null) => void
+  ): void {
+    const currentUserId = params.userId;
+    readData((err: Error | string | null, data: ConfigData | null) => {
+      if (err) {
+        callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
+      } else if (data) {
+        const userId = currentUserId;
+        checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+          if (err) {
+            callBack(err, null);
+          } else if (jKey) {
+            const payload: Record<string, any> = {
               userId,
               jKey,
               orderNumber: params.orderNumber,
@@ -2533,23 +2549,28 @@ modifyAMO(
               priceType: params.priceType,
               product: params.product,
               triggerPrice: params.triggerPrice,
-})
-            .then((response) => {
-              const { data } = response;
-              callBack(null, data);
-            })
-            .catch((error: AxiosError) => {
-              callBack(handleError(error), null);
-            });
-        } else {
-          callBack("No jKey found", null);
-        }
-      });
-    } else {
-      callBack("No config data found", null);
-    }
-  });
-}
+            };
+            if (params.mkt_protection !== undefined) {
+              payload.mktProtection = params.mkt_protection;
+            }
+            axiosInterceptor
+              .post<Response>(`modifyAMO`, payload)
+              .then((response) => {
+                const { data } = response;
+                callBack(null, data);
+              })
+              .catch((error: AxiosError) => {
+                callBack(handleError(error), null);
+              });
+          } else {
+            callBack("No jKey found", null);
+          }
+        });
+      } else {
+        callBack("No config data found", null);
+      }
+    });
+  }
 
 /**
  * Fetches option chain data with Greeks for a given symbol and expiry.

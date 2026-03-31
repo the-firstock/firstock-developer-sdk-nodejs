@@ -31,6 +31,7 @@ interface PlaceOrderParams {
   retention: string;
   remarks: string;
   triggerPrice: string;
+  mkt_protection?: string | number;
   [key: string]: any;
 }
 
@@ -51,6 +52,7 @@ interface ModifyOrderParams {
   priceType: string;
   product: string;
   retention: string;
+  mkt_protection?: string | number;
   [key: string]: any;
 }
 
@@ -241,26 +243,28 @@ interface GetFundamentalsParams {
 interface PlaceAMOParams {
   userId: string;
   exchange: string;
-  retention: string;
-  product: string;
-  priceType: string;
   tradingSymbol: string;
+  quantity: string | number;
+  price: string | number;
+  product: string;
   transactionType: string;
-  price: string;
-  triggerPrice: string;
-  quantity: string;
+  priceType: string;
+  retention: string;
   remarks: string;
+  triggerPrice: string;
+  mkt_protection?: string | number;
   [key: string]: any;
 }
 
 interface ModifyAMOParams {
   userId: string;
   orderNumber: string;
-  quantity: string;
-  price: string;
+  quantity: string | number;
+  price: string | number;
   priceType: string;
   product: string;
   triggerPrice: string;
+  mkt_protection?: string | number;
   [key: string]: any;
 }
 
