@@ -778,7 +778,7 @@ export class Firstock extends AFirstock {
               triggerPrice: params.triggerPrice,
             };
             if (params.mkt_protection !== undefined) {
-              payload.mktProtection = params.mkt_protection;
+              payload.mkt_protection = params.mkt_protection;
             }
             axiosInterceptor
               .post<Response>(`placeOrder`, payload)
@@ -1040,7 +1040,7 @@ export class Firstock extends AFirstock {
               retention: params.retention,
             };
             if (params.mkt_protection !== undefined) {
-              payload.mktProtection = params.mkt_protection;
+              payload.mkt_protection = params.mkt_protection;
             }
             axiosInterceptor
               .post<Response>(`modifyOrder`, payload)
@@ -2485,7 +2485,7 @@ getHoldingsDetails(
               triggerPrice: params.triggerPrice,
             };
             if (params.mkt_protection !== undefined) {
-              payload.mktProtection = params.mkt_protection;
+              payload.mkt_protection = params.mkt_protection;
             }
             axiosInterceptor
               .post<Response>(`placeAMO`, payload)
@@ -2551,7 +2551,7 @@ getHoldingsDetails(
               triggerPrice: params.triggerPrice,
             };
             if (params.mkt_protection !== undefined) {
-              payload.mktProtection = params.mkt_protection;
+              payload.mkt_protection = params.mkt_protection;
             }
             axiosInterceptor
               .post<Response>(`modifyAMO`, payload)
