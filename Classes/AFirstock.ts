@@ -333,6 +333,27 @@ interface CancelGTTOrderParams {
   GTTid: string;
   [key: string]: any;
 }
+
+interface BasketOrderLeg {
+  exchange: string;
+  retention: string;
+  product: string;
+  priceType: string;
+  tradingSymbol: string;
+  transactionType: string;
+  price: string;
+  triggerPrice: string;
+  quantity: string;
+  remarks: string;
+  mkt_protection?: string;
+  [key: string]: any;
+}
+
+interface BasketOrderParams {
+  userId: string;
+  legs: BasketOrderLeg[];
+  [key: string]: any;
+}
   
   
   abstract class AFirstock {
@@ -556,6 +577,11 @@ interface CancelGTTOrderParams {
     ): void;
 
     
+    abstract basketOrder(
+      params: BasketOrderParams,
+      callBack: (error: Error | string | null, result: Response | null) => void
+    ): void;
+
 }
   
   

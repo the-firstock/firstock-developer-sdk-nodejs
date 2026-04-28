@@ -348,6 +348,27 @@ interface GetHoldingsParams {
   // jKey: string;
   [key: string]: any;
 }
+
+interface BasketOrderLeg {
+  exchange: string;
+  retention: string;
+  product: string;
+  priceType: string;
+  tradingSymbol: string;
+  transactionType: string;
+  price: string;
+  triggerPrice: string;
+  quantity: string;
+  remarks: string;
+  mkt_protection?: string;
+  [key: string]: any;
+}
+
+interface BasketOrderParams {
+  userId: string;
+  legs: BasketOrderLeg[];
+  [key: string]: any;
+}
 // interface Config {
 //   scheme?: string;
 //   host?: string;
@@ -2787,6 +2808,72 @@ cancelGTTOrder(
   });
 }
 
+/**
+ * Places a basket order with multiple legs on the Firstock trading platform.
+ *
+ * @param {Object} params - Required parameters.
+ * @param {string} params.userId - Firstock user ID.
+ * @param {BasketOrderLeg[]} params.legs - Array of order legs.
+ * @param {string} params.legs[].exchange - Exchange (e.g., "NFO", "NSE").
+ * @param {string} params.legs[].retention - Order validity ("DAY", "IOC").
+ * @param {string} params.legs[].product - Product type ("C", "I", "M").
+ * @param {string} params.legs[].priceType - Order type ("MKT", "LMT", "SL-MKT", "SL-LMT").
+ * @param {string} params.legs[].tradingSymbol - Instrument symbol.
+ * @param {string} params.legs[].transactionType - "B" (Buy) or "S" (Sell).
+ * @param {string} params.legs[].price - Order price.
+ * @param {string} params.legs[].triggerPrice - Trigger price.
+ * @param {string} params.legs[].quantity - Quantity of shares or lots.
+ * @param {string} params.legs[].remarks - Optional remark.
+ * @param {string} [params.legs[].mkt_protection] - Optional market protection flag.
+ *
+ * @param {function} callBack - Callback function.
+ * @param {Error|string|null} callBack.error - Error message, if any.
+ * @param {Response|null} callBack.result - Response data.
+ */
+basketOrder(
+  params: BasketOrderParams,
+  callBack: (error: Error | string | null, result: Response | null) => void
+): void {
+  const currentUserId = params.userId;
+  readData((err: Error | string | null, data: ConfigData | null) => {
+    if (err) {
+      callBack(errorMessageMapping({ message: err instanceof Error ? err.message : err }), null);
+    } else if (data) {
+      const userId = currentUserId;
+      checkifUserLoggedIn({ userId, jsonData: data }, (err: string | null, jKey: string | null) => {
+        if (err) {
+          callBack(err, null);
+        } else if (jKey) {
+          axiosInterceptor
+            .post<Response>(
+              `basketOrder`,
+              {
+                userId,
+                jKey,
+                legs: params.legs,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${jKey}`,
+                },
+              }
+            )
+            .then((response) => {
+              const { data } = response;
+              callBack(null, data);
+            })
+            .catch((error: AxiosError) => {
+              callBack(handleError(error), null);
+            });
+        } else {
+          callBack("No jKey found", null);
+        }
+      });
+    } else {
+      callBack("No config data found", null);
+    }
+  });
+}
 
 }
 
